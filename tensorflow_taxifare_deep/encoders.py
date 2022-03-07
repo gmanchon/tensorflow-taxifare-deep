@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
-from taxifare_deep.utils import haversine_vectorized, sinuser, cosinuser
+from tensorflow_taxifare_deep.utils import haversine_vectorized, sinuser, cosinuser
 import pygeohash as gh
 import time
 

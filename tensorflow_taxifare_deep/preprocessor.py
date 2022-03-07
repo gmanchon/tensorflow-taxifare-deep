@@ -1,7 +1,7 @@
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from taxifare_deep.encoders import TimeFeaturesEncoder, DistanceTransformer, AddGeohash
+from tensorflow_taxifare_deep.encoders import TimeFeaturesEncoder, DistanceTransformer, AddGeohash
 
 from sklearn.preprocessing import FunctionTransformer
 

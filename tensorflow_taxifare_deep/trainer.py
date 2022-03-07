@@ -1,7 +1,7 @@
-from taxifare_deep.data import get_data, clean_data
-from taxifare_deep.utils import plot_model_history, simple_time_tracker
-from taxifare_deep.preprocessor import create_pipeline
-from taxifare_deep.network import Network
+from tensorflow_taxifare_deep.data import get_data, clean_data
+from tensorflow_taxifare_deep.utils import plot_model_history, simple_time_tracker
+from tensorflow_taxifare_deep.preprocessor import create_pipeline
+from tensorflow_taxifare_deep.network import Network
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
