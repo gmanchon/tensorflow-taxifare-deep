@@ -3,7 +3,10 @@ from datetime import datetime
 import pytz
 
 import pandas as pd
-import joblib
+
+# import joblib
+
+from tensorflow_taxifare_deep.trainer import Trainer
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,6 +29,7 @@ def root():
     return dict(greeting="hello")
 
 
+@app.get("/predict")
 def predict(pickup_datetime: datetime,  # 2013-07-06 17:18:00
             pickup_longitude: float,    # -73.950655
             pickup_latitude: float,     # 40.783282
@@ -41,9 +45,6 @@ def predict(pickup_datetime: datetime,  # 2013-07-06 17:18:00
     without type hinting we need to manually convert
     the parameters of the functions which are all received as strings
     """
-
-    # create datetime object from user provided date
-    pickup_datetime = datetime.strptime(pickup_datetime, "%Y-%m-%d %H:%M:%S")
 
     # localize the user provided datetime with the NYC timezone
     eastern = pytz.timezone("US/Eastern")
@@ -71,10 +72,14 @@ def predict(pickup_datetime: datetime,  # 2013-07-06 17:18:00
         passenger_count=[passenger_count]))
 
     # pipeline = get_model_from_gcp()
-    pipeline = joblib.load('model.joblib')
+    # pipeline = joblib.load('model.joblib')
 
     # step 3 : make prediction
-    y_pred = pipeline.predict(X_pred)
+    # y_pred = pipeline.predict(X_pred)
+
+    # step 3 : make prediction
+    trainer = Trainer(nrows=0)
+    trainer.load_model()
 
     # step 4 : return the prediction (extract from numpy array)
     pred = float(y_pred[0])
