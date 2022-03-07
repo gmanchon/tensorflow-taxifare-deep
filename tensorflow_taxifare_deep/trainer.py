@@ -175,11 +175,3 @@ if __name__ == "__main__":
 
     # evaluate on test set (by default the holdout from train/test/split)
     trainer.evaluate(X_test=None, y_test=None)
-
-if __name__ == "__main__":
-
-    # make a prediction
-    trainer = Trainer(nrows=0)
-    trainer.load_model()
-    X_pred = trainer.get_X_pred_example()
-    y_pred = trainer.predict(X_pred)
