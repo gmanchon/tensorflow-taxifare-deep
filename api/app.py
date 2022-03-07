@@ -80,6 +80,7 @@ def predict(pickup_datetime: datetime,  # 2013-07-06 17:18:00
     # step 3 : make prediction
     trainer = Trainer(nrows=0)
     trainer.load_model()
+    y_pred = trainer.predict(X_pred)
 
     # step 4 : return the prediction (extract from numpy array)
     pred = float(y_pred[0])
