@@ -5,9 +5,19 @@ from tensorflow_taxifare_deep.network import Network
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
+import os
+
+import joblib
+from tensorflow.keras import models
+
 
 class Trainer:
-    def __init__(self, nrows=10_000):
+    def __init__(
+            self,
+            nrows=10_000,
+            model_filename='my_model.h5',
+            pipe_filename='my_pipeline.joblib'):
+
         self.df = get_data(nrows=nrows)
         self.X = None
         self.y = None
@@ -19,6 +29,10 @@ class Trainer:
         self.pipe = None
         self.network = None
         self.history = None
+
+        self.project_path = os.path.dirname(os.path.dirname(__file__))
+        self.model_path = os.path.join(self.project_path, model_filename)
+        self.pipe_path = os.path.join(self.project_path, pipe_filename)
 
     @simple_time_tracker
     def clean(self):
@@ -71,6 +85,54 @@ class Trainer:
         print("###### test score (MAE)", mean_absolute_error(y_test, y_test_pred))
         # todo
 
+    @simple_time_tracker
+    def save_model(self, model_filename=None, pipe_filename=None):
+        if model_filename is None:
+            model_filename = self.model_path
+        if pipe_filename is None:
+            pipe_filename = self.pipe_path
+        self.network.model.save(model_filename)
+        joblib.dump(self.pipe, pipe_filename)
+
+    @simple_time_tracker
+    def load_model(self, model_filename=None, pipe_filename=None):
+        if model_filename is None:
+            model_filename = self.model_path
+        if pipe_filename is None:
+            pipe_filename = self.pipe_path
+        self.loaded_model = models.load_model(model_filename)
+        self.loaded_pipe = joblib.load(pipe_filename)
+
+    @simple_time_tracker
+    def get_X_pred_example(self):
+
+        import pandas as pd
+
+        # eventhough it is used as a parameter for the Kaggle submission
+        key = "2013-07-06 17:18:00.000000119"
+
+        # build X ⚠️ beware to the order of the parameters ⚠️
+        X_pred = pd.DataFrame(dict(
+            key=[key],  # useless but the pipeline requires it
+            pickup_datetime=["2013-07-06 17:18:00 UTC"],
+            pickup_longitude=[float("-73.950655")],
+            pickup_latitude=[float("40.783282")],
+            dropoff_longitude=[float("-73.984365")],
+            dropoff_latitude=[float("40.769802")],
+            passenger_count=[int("1")]))
+
+        return X_pred
+
+    @simple_time_tracker
+    def predict(self, X_pred=None):
+        print("###### predict...")
+        assert(X_pred is not None)
+        y_pred = self.loaded_model.predict(self.loaded_pipe.transform(X_pred))
+
+        print(f'prediction 🌴 {y_pred}')
+
+        return y_pred
+
 
 if __name__ == "__main__":
 
@@ -88,3 +150,11 @@ if __name__ == "__main__":
 
     # evaluate on test set (by default the holdout from train/test/split)
     trainer.evaluate(X_test=None, y_test=None)
+
+if __name__ == "__main__":
+
+    # make a prediction
+    trainer = Trainer(nrows=0)
+    trainer.load_model()
+    X_pred = trainer.get_X_pred_example()
+    y_pred = trainer.predict(X_pred)
