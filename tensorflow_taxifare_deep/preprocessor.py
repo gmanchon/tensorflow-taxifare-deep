@@ -5,6 +5,7 @@ from tensorflow_taxifare_deep.encoders import TimeFeaturesEncoder, DistanceTrans
 
 from sklearn.preprocessing import FunctionTransformer
 
+
 def create_pipeline():
     lonlat_features = [
         "pickup_latitude",

@@ -110,4 +110,3 @@ def simple_time_tracker(method):
         return result
 
     return timed
-

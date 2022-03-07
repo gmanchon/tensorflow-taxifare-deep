@@ -29,10 +29,10 @@ class TimeFeaturesEncoder(BaseEstimator, TransformerMixin):
         hour = pickup_dt.hour
         month = pickup_dt.month
         year = pickup_dt.year
-        #hour_sin = sinuser(hour, 24)
-        #hour_cos = cosinuser(hour, 24)
-        #month_sin = sinuser(month, 12)
-        #month_cos = cosinuser(month, 12)
+        # hour_sin = sinuser(hour, 24)
+        # hour_cos = cosinuser(hour, 24)
+        # month_sin = sinuser(month, 12)
+        # month_cos = cosinuser(month, 12)
         return pd.concat([hour, dow, month, year], axis=1)
 
 
@@ -68,6 +68,7 @@ class DistanceTransformer(BaseEstimator, TransformerMixin):
             end_lon=self.end_lon,
         )
         return X_[["distance"]]
+
 
 class AddGeohash(BaseEstimator, TransformerMixin):
     '''
