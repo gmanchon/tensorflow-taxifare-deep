@@ -2,6 +2,8 @@ from tensorflow_taxifare_deep.data import get_data, clean_data
 from tensorflow_taxifare_deep.utils import plot_model_history, simple_time_tracker
 from tensorflow_taxifare_deep.preprocessor import create_pipeline
 from tensorflow_taxifare_deep.network import Network
+from tensorflow_taxifare_deep.gcp_bucket import download_blob, upload_file
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
@@ -30,9 +32,16 @@ class Trainer:
         self.network = None
         self.history = None
 
+        # model local storage
         self.project_path = os.path.dirname(os.path.dirname(__file__))
         self.model_path = os.path.join(self.project_path, model_filename)
         self.pipe_path = os.path.join(self.project_path, pipe_filename)
+
+        # model bucket storage
+        self.bucket_name = 'le-wagon-ds'
+        self.bucket_model_root = 'models/tensorflow_taxifare_deep'
+        self.model_blob = f'{self.bucket_model_root}/{model_filename}'
+        self.pipe_blob = f'{self.bucket_model_root}/{pipe_filename}'
 
     @simple_time_tracker
     def clean(self):
@@ -87,19 +96,35 @@ class Trainer:
 
     @simple_time_tracker
     def save_model(self, model_filename=None, pipe_filename=None):
+
+        # get model path
         if model_filename is None:
             model_filename = self.model_path
         if pipe_filename is None:
             pipe_filename = self.pipe_path
+
+        # save model
         self.network.model.save(model_filename)
         joblib.dump(self.pipe, pipe_filename)
 
+        # upload model to gcp
+        upload_file(self.bucket_name, self.model_path, self.model_blob)
+        upload_file(self.bucket_name, self.pipe_path, self.pipe_blob)
+
     @simple_time_tracker
     def load_model(self, model_filename=None, pipe_filename=None):
+
+        # get model path
         if model_filename is None:
             model_filename = self.model_path
         if pipe_filename is None:
             pipe_filename = self.pipe_path
+
+        # download model from gcp
+        download_blob(self.bucket_name, self.model_blob, self.model_path)
+        download_blob(self.bucket_name, self.pipe_blob, self.pipe_path)
+
+        # load model
         self.loaded_model = models.load_model(model_filename)
         self.loaded_pipe = joblib.load(pipe_filename)
 
