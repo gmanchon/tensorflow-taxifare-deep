@@ -1,6 +1,12 @@
 
 test package for taxifare deep
 
+added features:
+- save sklearn pipeline and tensorflow model to gcp bucket
+- download sklearn pipeline and tensorflow model from gcp bucket
+- make prediction using downloaded model
+- prediction api
+
 # tests
 
 ``` bash
