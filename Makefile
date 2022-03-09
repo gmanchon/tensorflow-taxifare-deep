@@ -1,4 +1,7 @@
 
+install:
+	pip install -r requirements.txt
+
 default: pylint pytest
 
 pylint:
