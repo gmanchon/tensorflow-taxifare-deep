@@ -1,4 +1,6 @@
 
+import tensorflow as tf
+
 from datetime import datetime
 import pytz
 
@@ -25,8 +27,12 @@ app.add_middleware(
 
 
 @app.get("/")
-def root():
-    return dict(greeting="hello")
+def index():
+    return {
+        "physical devices": tf.config.list_physical_devices("GPU"),
+        "is GPU available": tf.test.is_gpu_available(),
+        "GPU device name": tf.test.gpu_device_name()
+    }
 
 
 @app.get("/predict")
