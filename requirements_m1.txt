@@ -1,0 +1,15 @@
+uvicorn
+fastapi
+
+numpy
+pandas
+
+scikit-learn
+tensorflow-macos
+joblib
+
+google-cloud-storage
+
+matplotlib
+pygeohash
+pytz
