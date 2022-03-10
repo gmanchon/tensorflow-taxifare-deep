@@ -6,6 +6,7 @@ added features:
 - download sklearn pipeline and tensorflow model from gcp bucket
 - make prediction using downloaded model and pipeline
 - prediction api
+- used in order to run the tutorial on production API with GPU using Vertex AI Workbench
 
 # tests
 
