@@ -1,4 +1,7 @@
 
+based on the [taxi-fare-deep model](https://github.com/lewagon/taxi-fare-deep)
+used by the [lw vertex api tutorial](https://kitt.lewagon.com/knowledge/tutorials/vertex_api)
+
 test package for taxifare deep
 
 added features:
